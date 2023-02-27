@@ -1,13 +1,19 @@
-import "./errors.huff"
+#include "./errors.huff"
 
 // Define the function in the contract
 #define function setCounter(uint256) = takes(1) returns (1){
     // Initial Stack [counter]
-    push1 0x00 // [0x00]
-    mstore
+    gt 0xa                      // [counter]
+    error jmpi
+    // Need to do the jump in case if invalid
+    push1 0x00                  // [0x00, counter]
+    mstore                      // []
 
     // Return result
     0x00 mstore
     0x20 0x00 return
+
+    error:
+        PANIC(0x26f19f34)
 
 }
